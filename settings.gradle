@@ -1,2 +1,3 @@
 rootProject.name='FractalClcok'
 include ':sample'
+include ':fractal-clock-view'
