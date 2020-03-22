@@ -101,21 +101,21 @@ class FractalClockView @JvmOverloads constructor(
     private fun getHourEndPoint(hour: Int, minute: Int, second: Int): Point {
         val halfOfView = minOf(height, width) / 2
         val hourLegLength = halfOfView * .4
-        val hourDeg = hour * TWELFTH_OF_CIRCLE_IN_DEGREE + minute * ONE_MIN_DEGREE_OF_HOUR + second * ONE_SEC_DEGREE_OF_HOUR
+        val hourDeg = hour * ONE_HOUR_DEGREE_IN_CIRCLE + minute * ONE_MIN_DEGREE_OF_HOUR_IN_CIRCLE + second * ONE_SEC_DEGREE_OF_HOUR_IN_CIRCLE
         return getEndPoint(hourDeg, hourLegLength)
     }
 
     private fun getMinuteEndPoint(minute: Int, second: Int): Point {
         val halfOfView = minOf(height, width) / 2
         val minuteLegLength = halfOfView * .5
-        val minuteDeg = minute * ONE_MIN_DEGREE_ + second * ONE_SEC_DEGREE_OF_HOUR3
+        val minuteDeg = minute * ONE_MIN_DEGREE_IN_CIRCLE + second * ONE_SEC_DEGREE_OF_MINUTE_IN_CIRCLE
         return getEndPoint(minuteDeg, minuteLegLength)
     }
 
-    private fun getSecondEndPoint(second: Int, maliSeconds: Int): Point {
+    private fun getSecondEndPoint(second: Int, millieSeconds: Int): Point {
         val halfOfView = minOf(height, width) / 2
         val secondLegLength = halfOfView * .6
-        val secondDeg = second * ONE_MIN_DEGREE_ + maliSeconds * (360.0 / 60 / 1000)
+        val secondDeg = second * ONE_SEC_DEGREE_IN_CIRCLE + millieSeconds * (360.0 / 60 / 1000)
         return getEndPoint(secondDeg, secondLegLength)
     }
 
@@ -148,10 +148,11 @@ class FractalClockView @JvmOverloads constructor(
 
     companion object {
         const val TAG = "FractalClockView"
-        const val TWELFTH_OF_CIRCLE_IN_DEGREE = 360.0 / 12.0
-        const val ONE_MIN_DEGREE_OF_HOUR = 360.0 / (12.0 * 60.0)
-        const val ONE_MIN_DEGREE_ = 360.0 / 60.0
-        const val ONE_SEC_DEGREE_OF_HOUR = 360.0 / (12.0 * 60.0 * 60.0)
-        const val ONE_SEC_DEGREE_OF_HOUR3 = 360.0 / (60.0 * 60.0)
+        const val ONE_HOUR_DEGREE_IN_CIRCLE = 360.0 / 12.0
+        const val ONE_MIN_DEGREE_OF_HOUR_IN_CIRCLE = 360.0 / (12.0 * 60.0)
+        const val ONE_MIN_DEGREE_IN_CIRCLE = 360.0 / 60.0
+        const val ONE_SEC_DEGREE_IN_CIRCLE = 360.0 / 60.0
+        const val ONE_SEC_DEGREE_OF_HOUR_IN_CIRCLE = 360.0 / (12.0 * 60.0 * 60.0)
+        const val ONE_SEC_DEGREE_OF_MINUTE_IN_CIRCLE = 360.0 / (60.0 * 60.0)
     }
 }
