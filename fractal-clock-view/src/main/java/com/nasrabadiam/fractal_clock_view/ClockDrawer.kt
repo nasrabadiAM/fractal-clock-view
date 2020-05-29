@@ -80,12 +80,14 @@ class ClockDrawer {
         val depth = previousDepth + 1
         val thickness = previousThickness * 2 / 3
 
+        val additionalDegree = if (depth <= 1) 0f else depth * .5f
+
         val currentMinuteEndOfView: Point = getMinuteEndPoint(
             minute,
             second,
             minuteLength,
             centerOfView,
-            depth * .5f
+            additionalDegree
         )
         drawLine(
             canvas,
@@ -101,7 +103,7 @@ class ClockDrawer {
             milliSeconds,
             secondLength,
             centerOfView,
-            depth * .5f
+            additionalDegree
         )
         drawLine(
             canvas,
