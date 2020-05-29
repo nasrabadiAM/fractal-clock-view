@@ -14,6 +14,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        fractalClock.isPreview = true
+        fractalClock._previewSpeed = 10
         handler = Handler().apply {
             postDelayed(object : Runnable {
                 override fun run() {

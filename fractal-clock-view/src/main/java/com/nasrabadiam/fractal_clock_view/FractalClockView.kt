@@ -2,8 +2,6 @@ package com.nasrabadiam.fractal_clock_view
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
@@ -13,27 +11,16 @@ class FractalClockView @JvmOverloads constructor(
     attr: AttributeSet? = null
 ) : View(context, attr) {
 
+    var isPreview = false
+    var _previewSpeed: Int? = null
+    private val previewSpeed: Int
+        get() = _previewSpeed ?: 6
+
     private var hour: Int = 0
     private var minute: Int = 0
     private var second: Int = 0
     private var milliSeconds: Int = 0
-    private val clockViewHelper = ClockViewHelper()
-
-    private val paintOfHour = Paint().apply {
-        color = Color.RED
-        strokeWidth = 8f
-        isAntiAlias = true
-    }
-    private val paintOfMinute = Paint().apply {
-        color = Color.RED
-        strokeWidth = 4f
-        isAntiAlias = true
-    }
-    private val paintOfSecond = Paint().apply {
-        color = Color.RED
-        strokeWidth = 2f
-        isAntiAlias = true
-    }
+    private val clockDrawer = ClockDrawer()
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = measureDimension(
@@ -48,41 +35,34 @@ class FractalClockView @JvmOverloads constructor(
     }
 
     fun updateTime(hour: Int, minute: Int, second: Int, milliSeconds: Int) {
-        this.hour = if (hour >= 12) {
-            hour - 12
-        } else {
-            hour
-        }
-        this.minute = minute
-        this.second = second
-        this.milliSeconds = milliSeconds
+        val speed = if (isPreview) previewSpeed else 1
+        this.hour = (if (hour >= 12) hour - 12 else hour) * speed
+        this.minute = minute * speed
+        this.second = second * speed
+        this.milliSeconds = milliSeconds * speed
         invalidate()
     }
 
-    private fun getCenterOfViewPoint(): Point {
-        return Point(width / 2f, height / 2f)
+    private fun getCenterOfViewPoint(): ClockDrawer.Point {
+        return ClockDrawer.Point(width / 2f, height / 2f)
     }
 
     override fun onDraw(canvas: Canvas?) {
         val centerOfView = getCenterOfViewPoint()
-        val lines = clockViewHelper.getLegLinesToDraw(hour, minute, second, milliSeconds, centerOfView)
-        lines.forEach {
-            val paint = getPaint(it)
-            canvas?.drawLine(
-                it.startPoint.x,
-                it.startPoint.y,
-                it.endPoint.x,
-                it.endPoint.y,
-                paint
+        val maximumLegLength = minOf(centerOfView.x, centerOfView.y)
+
+        canvas?.let {
+            clockDrawer.drawFractal(
+                it,
+                hour,
+                minute,
+                second,
+                milliSeconds,
+                maximumLegLength,
+                centerOfView
             )
         }
         super.onDraw(canvas)
-    }
-
-    private fun getPaint(it: Line) = when (it.legType) {
-        LegType.HOUR -> paintOfHour
-        LegType.MINUTE -> paintOfMinute
-        LegType.SECOND -> paintOfSecond
     }
 
     private fun measureDimension(desiredSize: Int, measureSpec: Int): Int {
