@@ -14,13 +14,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        handler = Handler()
-        handler?.postDelayed(object : Runnable {
-            override fun run() {
-                updateClock()
-                handler?.postDelayed(this, 60)
-            }
-        }, 60)
+        handler = Handler().apply {
+            postDelayed(object : Runnable {
+                override fun run() {
+                    updateClock()
+                    handler?.postDelayed(this, 50)
+                }
+            }, 50)
+        }
     }
 
     fun updateClock() {
